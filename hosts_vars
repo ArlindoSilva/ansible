@@ -1,5 +1,5 @@
 [maquinas]
-174.138.65.191 
+174.138.65.191 nome=Antonio
 104.236.83.200
 
 [maquinas:vars]
