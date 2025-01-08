@@ -1,0 +1,54 @@
+- name: Criação do usuário arlindo
+  hosts: all
+  remote_user: root
+  tasks:
+    - name: Garantir que o grupo arlindo existe 
+      ansible.builtin.group: 
+        name: arlindo
+
+    - name: Criar o usuário arlindo
+      ansible.builtin.user:
+        name: arlindo
+        shell: /bin/bash
+        groups: sudo
+        append: yes
+        #  $ mkpasswd --method=sha-512
+        password: $6$E6leiA/YhSCt6k.i$ddUFTH.eNiZXE6RQw4HfJhlpeMxZIwgljb8tU6zoSUEHEENe9B.9D3peQpiWqacw/7J/HNAgl8YxbY65T5mHC.
+        
+    - name: Criar o diretório .ssh
+      ansible.builtin.file:
+        path: /home/arlindo/.ssh/
+        owner: arlindo
+        group: arlindo
+        state: directory
+        mode: '0700'
+        recurse: true
+    - name: Adicionando a chave pública em authorized keys
+      ansible.builtin.copy:
+        src: /home/arlindo/.ssh/id_ed25519.pub
+        dest: /home/arlindo/.ssh/authorized_keys
+
+
+- name: Instalação do nginx e configuração de uma página estática
+  hosts: all
+  remote_user: arlindo
+  tasks:
+    - name: copiar a página web que vai ser usada
+      ansible.builtin.copy:
+        src: ./index.html
+        dest: /home/arlindo/index.html
+    - name: Instalar o nginx
+      become: true
+      ansible.builtin.apt:
+        name: nginx
+        state: present
+    - name: Copiar o arquivo nginx.conf para o servidor
+      become: true
+      ansible.builtin.copy:
+        src: ./nginx.conf
+        dest: /etc/nginx/nginx.conf
+    - name: Reiniciar o serviço do nginx
+      become: true
+      ansible.builtin.service:
+        name: nginx
+        state: restarted
