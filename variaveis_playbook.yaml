@@ -1,8 +1,8 @@
 ---
 - name: Exibindo exemplo com variáveis
   hosts: localhost
-  vars: 
-    nome: Arlindo
+  vars_files: 
+    - vars.yaml
   tasks:
     - name: Exibir mensagem
       ansible.builtin.debug:
