@@ -1,6 +1,6 @@
 ---
 - name: Exibindo exemplo com variáveis
-  hosts: localhost
+  hosts: all
   tasks:
     - name: Exibir mensagem
       ansible.builtin.debug:
