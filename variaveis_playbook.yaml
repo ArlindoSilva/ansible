@@ -8,3 +8,6 @@
 
 #Outra forma é passar a variável diretamente na linha de comando. Apaga a referência do playbook e na linha de comando passa o comando abaixo:
 #ansible-playbook variaveis_playbook.yaml --extra-vars "nome=José"
+
+#A terceira forma é usar a linha de comando referenciando um arquivo que tenha a variável, exemplo:
+#ansible-playbook variaveis_playbook.yaml --extra-vars "@vars.yaml"
