@@ -1,7 +1,9 @@
 ---
 - name: Exibindo exemplo com variáveis
   hosts: localhost
+  vars: 
+    nome: Arlindo
   tasks:
     - name: Exibir mensagem
       ansible.builtin.debug:
-        msg: "Fala aí Fulano, blz ?"
+        msg: "Fala aí {{ nome}}, blz ?"
