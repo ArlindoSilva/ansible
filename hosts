@@ -1,8 +1,7 @@
-[nginx]
-45.55.201.181
-45.55.199.63
-45.55.227.56
+[maquinas]
+165.227.103.9
+165.227.96.106
 
-[nginx:vars]
+[maquinas:vars]
 ansible_ssh_private_key_file=~/.ssh/id_ed25519
-
+remote_user=root

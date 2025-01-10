@@ -1,11 +1,18 @@
 ---
-- name: Resultado de um comando
-  hosts: localhost
+- name: Criação de usuário
+  hosts: all
+  remote_user: root
+  vars:
+    senha: 251211
   tasks: 
-    - name: Registrar um comando
-      ansible.builtin.shell: ps
-      register: ps_result    #armazena o comando acima na variável ps_result
-    - name: Verificar resultado
+    - name: Instalação do pacote whois para gerar a senha
+      ansible.builtin.apt:
+        name: whois
+        state: present
+        update_cache: true
+    - name: Gerar a senha criptografada 
+      ansible.builtin.shell: "mkpasswd --method=sha-512 {{ senha }}"
+      register: cripto_pwd
+    - name: Verificar a senha
       ansible.builtin.debug:
-        msg: "{{ps_result}}"  #Exibe o conteúdo da variável
-  
+        msg: "{{ cripto_pwd }}"
