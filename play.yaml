@@ -1,0 +1,11 @@
+---
+- name: Resultado de um comando
+  hosts: localhost
+  tasks: 
+    - name: Registrar um comando
+      ansible.builtin.shell: ps
+      register: ps_result    #armazena o comando acima na variável ps_result
+    - name: Verificar resultado
+      ansible.builtin.debug:
+        msg: "{{ps_result}}"  #Exibe o conteúdo da variável
+  
