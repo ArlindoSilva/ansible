@@ -6,14 +6,17 @@
     senha: 251211
     usuario: fulano
   tasks: 
+    #Pacote necessário para trabalhar com o mkpasswd
     - name: Instalação do pacote whois para gerar a senha
       ansible.builtin.apt:
         name: whois
         state: present
         update_cache: true
+    # Gera a senha e armazena variável cripto-pwd
     - name: Gerar a senha criptografada 
       ansible.builtin.shell: "mkpasswd --method=sha-512 {{ senha }}"
       register: cripto_pwd
+      # Pega o stdout da variável criada acima, cria um usuário e adiciona ao grupo sudo, sem tirá-lo de outros grupos
     - name: Criar o usuário no Linux
       ansible.builtin.user:
         name: "{{ usuario }}"
@@ -21,6 +24,7 @@
         groups: sudo
         append: yes
         password: "{{ cripto_pwd.stdout }}"
+      # Cria um diretório SSH para o usuário criado
     - name: Criar o diretório SSH
       ansible.builtin.file:
         path: "/home/{{ usuario }}/.ssh"
@@ -28,6 +32,7 @@
         group: "{{ usuario }}"
         owner: "{{ usuario }}"
         recurse: true 
+      # Copia a chave pública da maquina para o diretório .ssh/authorized_keys do usuário criado
     - name: Copiando a chave SSH para o authorized_keys
       ansible.builtin.copy:
         src: /home/arlindo/.ssh/id_ed25519.pub
