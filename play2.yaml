@@ -1,0 +1,14 @@
+---
+- name: Teste de instalação do nginx
+  hosts: all
+  remote_user: root
+  tasks:
+    - name: Instalação do nginx
+      ansible.builtin.apt:
+        name: nginx
+        state: present
+        update_cache: true
+      register: nginx_out
+    - name: Verificando saída
+      ansible.builtin.debug:
+        msg: "{{nginx_out}}"
