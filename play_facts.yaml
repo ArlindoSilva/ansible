@@ -1,0 +1,12 @@
+--- 
+- name: Ver os dados de facts
+  hosts: all
+  remote_user: root
+  tasks:
+    - name: Informações da rede
+      ansible.builtin.debug:
+        msg: "{{ ansible_eth0.ipv4.address }}"
+
+
+
+#ansible-playbook -i hosts play_facts.yaml
