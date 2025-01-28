@@ -2,11 +2,14 @@
 - name: Ver os dados de facts
   hosts: all
   remote_user: root
+  gather_facts: false 
   tasks:
     - name: Informações da rede
       ansible.builtin.debug:
-        msg: "{{ ansible_eth0.ipv4.address }}"
+        msg: "Olá Arlindo"
+        #msg: "{{ ansible_eth0.ipv4.address }}"
 
 
 
 #ansible-playbook -i hosts play_facts.yaml
+#Se desabilitar o gather_facts, precisa comentar a variável que acessa informações dele. Neste exemplo, o código da linha 10.
