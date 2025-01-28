@@ -1,7 +1,12 @@
 [maquinas]
-165.227.103.9
-165.227.96.106
+157.245.113.59
+157.245.125.96
 
 [maquinas:vars]
 ansible_ssh_private_key_file=~/.ssh/id_ed25519
-remote_user=root
+ansible_user=root
+
+#Consultando facts com ansible ad hoc, ex:
+#ansible all -i hosts -m setup  - pega informações gerais de setup 
+#ansible all -i hosts -m setup | grep ansible_eth  - pega uma variável específica
+#ansible all -i hosts -m setup -a "filter=ansible_eth*"  - Pega todas as informações de rede
