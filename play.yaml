@@ -2,9 +2,6 @@
 - name: Criação de usuário
   hosts: all
   remote_user: root
-  vars:
-    senha: 251211
-    usuario: fulano
   tasks: 
     #Pacote necessário para trabalhar com o mkpasswd
     - name: Instalação do pacote whois para gerar a senha
@@ -16,7 +13,7 @@
     - name: Gerar a senha criptografada 
       ansible.builtin.shell: "mkpasswd --method=sha-512 {{ senha }}"
       register: cripto_pwd
-      # Pega o stdout da variável criada acima, cria um usuário e adiciona ao grupo sudo, sem tirá-lo de outros grupos
+      # Pega o stdout da variável criada acima, cria um usuário e adiciona ao grupo sudo, sem tirar os outros do grupo
     - name: Criar o usuário no Linux
       ansible.builtin.user:
         name: "{{ usuario }}"
@@ -35,5 +32,29 @@
       # Copia a chave pública da maquina para o diretório .ssh/authorized_keys do usuário criado
     - name: Copiando a chave SSH para o authorized_keys
       ansible.builtin.copy:
-        src: /home/arlindo/.ssh/id_ed25519.pub
-        dest: /home/{{usuario}}/.ssh/authorized_keys
+        src: "{{ chave_publica }}"
+        dest: "/home/{{usuario}}/.ssh/authorized_keys"
+      
+- name: Instalar nginx e executar página web
+  remote_user: "{{ usuario }}"
+  hosts: all
+  tasks:
+  - name: Instalar o nginx
+    become: true
+    ansible.builtin.apt:
+      name: nginx
+      update_cache: yes
+  - name: Copiar a página web que vai ser usada
+    ansible.builtin.copy:
+      src: ./index.html
+      dest: "/home/{{ usuario }}/index.html"
+  - name: Enviar o nginx.conf com a nova configuração
+    become: true
+    ansible.builtin.template:
+      src: ./nginx.conf.j2
+      dest: /etc/nginx/nginx.conf
+  - name: Reiniciar o serviço do nginx
+    become: true
+    ansible.builtin.service:
+      name: nginx
+      state: restarted

@@ -1,4 +1,4 @@
-user arlindo arlindo;
+user {{ usuario }} {{ usuario }};
 
 events
 {
@@ -9,7 +9,7 @@ http
 {
     server
     {
-        root /home/arlindo/;
+        root /home/{{ usuario }}/;
         location /
         {
             index index.html;
